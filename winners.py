@@ -7,8 +7,6 @@ from nltk.tokenize import TweetTokenizer
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
-<<<<<<< HEAD
-=======
 with open('gg2013.json') as json_file:
     data = json.load(json_file)
 

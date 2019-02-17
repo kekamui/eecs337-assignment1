@@ -72,7 +72,7 @@ def host(file_name):
             return {"hosts":[sorted_list[0][0].lower(),sorted_list[1][0].lower()]}
 
         else:
-
+            #eeeee
             print({"hosts":sorted_final_dict[0][0].lower() + " " + sorted_final_dict[1][0].lower()})
             return {"hosts":sorted_final_dict[0][0].lower() + " " + sorted_final_dict[1][0].lower()}
 

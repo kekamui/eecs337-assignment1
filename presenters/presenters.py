@@ -92,12 +92,24 @@ doc2 = nlp('Hello my name is Jimmy')
 
 
 # print(get_name_portion("hi Jimmy Yook"))
+# def isPresenterTweet(tweet):
+# 	doc=nlp(tweet)
+# 	for idx, tok in enumerate(doc):
+# 		if tok.pos_ == "VERB" and tok.lemma_ in ("present","introduce","announce"):
+# 			print(tweet)
+# 			return True
+# 	return False
+
 def isPresenterTweet(tweet):
 	doc=nlp(tweet)
 	for idx, tok in enumerate(doc):
-		if tok.pos_ == "VERB" and tok.lemma_ in ("present","introduce","announce"):
-			print(tweet)
-			return True
+		if tok.pos_ == "VERB":
+			if tok.lemma_ in ("present","introduce","announce"):
+				return True
+			if tok.lemma_ == "be" and "presenter" in tweet:
+				# print("be verb case")
+				# print(tweet)
+				return True
 	return False
 
 def extract_nsubj(tweet):
@@ -105,6 +117,31 @@ def extract_nsubj(tweet):
 	sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj")]
 	return sub_toks
 
+def extract_subj_entities(doc):
+	ents=list(doc.ents)
+	person_ents = [ent for ent in ents if ent.label_=='PERSON']
+	#print(person_ents)
+	entityListCurrIndex=0
+	subjEnts=[]
+	if person_ents:
+		for tok in doc:
+			if tok.pos_=="VERB" or entityListCurrIndex == len(person_ents):
+				return subjEnts
+			else:
+				#print(tok)
+				#print(entityListCurrIndex)
+				if tok.text in person_ents[entityListCurrIndex].text:
+					subjEnts.append(person_ents[entityListCurrIndex].text)
+					entityListCurrIndex+=1
+	return subjEnts
+
+def isFullName(name):
+	if 'golden' in name or 'globes' in name:
+		return False
+	pattern = r'^[A-Z]\w+(?:\s[A-Z]\w+?)?\s(?:[A-Z]\w+?)?$'
+	if re.match(pattern,name):
+		return True
+	return False
 #######main
 def extract_presenters():
 
@@ -114,31 +151,39 @@ def extract_presenters():
 
 	for twt in twts:
 		for presenter_word in presenter_words:
-			if presenter_word in twt and "Best" in twt:
+			if presenter_word in twt and 'RT' not in twt:
 				if isPresenterTweet(twt):
+					if "Best" in twt:
+						print(twt)
+				#if True:
 				#print('--------')
 					subjects = extract_nsubj(twt)
-					print(twt)
+					#print(twt)
 					twtdoc = nlp(twt)
-					for X in twtdoc.ents:
-						if X.label_ == 'PERSON':
-							##need refining function for names (punctuations, stop words etc)
-							#print(X.text)
-							if '@' not in X.text and len(X.text.split(" "))>1:
-							#todo: excluded one-word names for now. maybe find a way to add them to the count if match with the full names?
-							#todo: also, find a way to merge typos?
-								name=X.text
-								print('-------')
-								print(name)
-								name=remove_punctuations(name)
-								name=remove_stopwords(name)
-								name=get_name_portion(name)
-								print(name)
-								for subj in subjects:
-									if subj.text in name: #if name is the subject
-									#todo: find how to get X and Y subjects
-										text_data.append(name)
-										break
+					subjnames=extract_subj_entities(twtdoc)
+					for subjname in subjnames:
+						name = subjname
+						# print('-------')
+						# print(name)
+						name=remove_punctuations(name)
+						name=remove_stopwords(name)
+						name=get_name_portion(name)
+						# print(name)
+						if isFullName(name):
+							text_data.append(name)
+
+					#text_data.extend(subjnames)
+					# for X in subjnames:
+					# 	if '@' not in X.text and len(X.text.split(" "))>1:
+					# 	#todo: excluded one-word names for now. maybe find a way to add them to the count if match with the full names?
+					# 	#todo: also, find a way to merge typos?
+					# 		name=X.text
+					# 		print('-------')
+					# 		print(name)
+					# 		name=remove_punctuations(name)
+					# 		name=remove_stopwords(name)
+					# 		name=get_name_portion(name)
+					# 		print(name)
 
 				break
 
@@ -149,7 +194,8 @@ def extract_presenters():
 
 extract_presenters()
 #print(text_data)
-#search_tweet(["Tarantino"], "RT")
+#search_tweet(["Brolin"], "RT")
+
 
 
 

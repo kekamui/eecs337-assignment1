@@ -134,9 +134,9 @@ stop_dict_nominees = ["golden", "globes", "goldenglobes", "awards", "tweet",
 #     # print(awards_and_winners)
 
 def nominees(awards_and_winners):
-    print(awards_and_winners)
     value = ""
-    for key,values in awards_and_winners.items():
+    for keys,values in awards_and_winners.items():
+        key = keys
         value = values
 
     checkfor = ["beat", "beats", "beating", "better than", "over", "upset", "liked", "wish", "robbed"]
@@ -243,11 +243,11 @@ def nominees(awards_and_winners):
             if count == 4:
                 break
             lisst = final_ret["nominees"]
-            lisst.append(i)
+            lisst.append(i[0])
             final_ret.update({"nominees":lisst})
             count += 1
-        return final_ret
-    return [{"nominees":""}]
+        return {key:final_ret}
+    return {"":[{"nominees":""}]}
 
 for award in OFFICIAL_AWARDS_1315:
     awards_and_winners = winners(data,award)

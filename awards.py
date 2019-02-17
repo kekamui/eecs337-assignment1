@@ -7,9 +7,9 @@ def awards(file_name):
 
     # nlp = spacy.load('en_core_web_sm')
 
-    file_data = open(file_name)
+    #file_data = open(file_name)
 
-    data = json.load(file_data)
+    #data = json.load(file_data)
 
     # Data from each tweet will be added to this array after that tweet is processed
     text_data = []

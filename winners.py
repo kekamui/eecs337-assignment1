@@ -39,6 +39,7 @@ OFFICIAL_AWARDS_1315 = [
 
 OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - musical or comedy', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best performance by an actress in a motion picture - musical or comedy', 'best performance by an actor in a motion picture - musical or comedy', 'best performance by an actress in a supporting role in any motion picture', 'best performance by an actor in a supporting role in any motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best motion picture - animated', 'best motion picture - foreign language', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best television series - musical or comedy', 'best television limited series or motion picture made for television', 'best performance by an actress in a limited series or a motion picture made for television', 'best performance by an actor in a limited series or a motion picture made for television', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best performance by an actress in a television series - musical or comedy', 'best performance by an actor in a television series - musical or comedy', 'best performance by an actress in a supporting role in a series, limited series or motion picture made for television', 'best performance by an actor in a supporting role in a series, limited series or motion picture made for television', 'cecil b. demille award']
 
+>>>>>>> ddfe5cb6c18c5b5b233e4f9b933eff3a7547b857
 big_dict = [
 ["best performance by an actress in a motion picture - drama"],
 ["best performance by an actor in a motion picture - drama"],
@@ -146,6 +147,4 @@ def winners(data, list_of_awards):
             # print("2")
             result.update({host_word:(sorted_list[0][0])})
 
-    return result    
-
-print(winners(data,OFFICIAL_AWARDS_1315))
+    return result

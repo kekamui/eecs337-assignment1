@@ -55,21 +55,6 @@ def pres(data):
                         else:
                             final_dict.update({temp_quote:1})
 
-                        # if temp_quote in final_dict2:
-                        #     prev_list = final_dict2[temp_quote]
-                        #     for lists in prev_list:
-                        #         if prev_list == nnp_list:
-                        #             key2 = True
-                        #     if key:
-                        #         prev_list.append(nnp_list)
-                        #         final_dict2.update({temp_quote:prev_list})
-                        # else:
-                        #     final_dict2.update({temp_quote:[nnp_list]})
-
-
-
-
-
     sorted_list = sorted(final_dict.items(), key = itemgetter(1), reverse = True)
     final_ret = {"jokes":[]}
     count = 0

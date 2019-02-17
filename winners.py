@@ -7,9 +7,6 @@ from nltk.tokenize import TweetTokenizer
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
-with open('gg2013.json') as json_file:
-    data = json.load(json_file)
-
 
 OFFICIAL_AWARDS_1315 = [
 'cecil b. demille award',

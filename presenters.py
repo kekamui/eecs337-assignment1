@@ -300,6 +300,8 @@ def extract_presenters():
 		presenterfreqdist = FreqDist(awardWinnerPresenterDict["presenters"])
 		awardWinnerPresenterDict["presenters"] = [p for p,c in presenterfreqdist.most_common(2)]
 	pprint.pprint(awardWinnerPresenterList)
+
+	###return
 	return awardWinnerPresenterList
 extract_presenters()
 #print(text_data)

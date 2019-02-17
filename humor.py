@@ -12,8 +12,6 @@ nltk.download('stopwords')
 with open('gg2013.json') as json_file:
     data = json.load(json_file)
 
-tknzr = TweetTokenizer()
-
 
 def pres(data):
     host_dict = ["joke", "#joke"]
@@ -68,4 +66,4 @@ def pres(data):
     return final_ret
 
     # print(sorted_list[0][0],sorted_list[1][0])
-print(pres(data))
+# print(pres(data))

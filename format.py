@@ -46,15 +46,10 @@ OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - mu
 with open(sys.argv[1]) as json_file:
     data_final = json.load(json_file)
 
-if sys.argv[1] == "gg2013.json":
+if sys.argv[1] == "gg2013.json" or "gg2015.json":
     award_list = OFFICIAL_AWARDS_1315
-if sys.argv[1] == "gg2015.json":
+else:
     award_list = OFFICIAL_AWARDS_1819
-
-######### MODIFY IF STATEMENT HERE TO TEST OTHER GOLDEN GLOBE YEARS ##########
-# if sys.argv[1] == ".json":
-#     award_list =
-
 
 final_dict = {}
 award_dict = {}
@@ -70,7 +65,6 @@ def json_format(data, award_data):
     winners_dict = winners.winners(data, award_data)
     nominees_dict = nom.nominees(data, award_data, winners_dict)
     # presenters_dict = extract_presenters(data, award_data)
-    # print("Finished compile")
 
     for award in award_list:
         #final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
@@ -121,7 +115,7 @@ def human_sent_hosts(json_format_result):
     return human_result
 
 
-# final = json_format(data_final, award_list)
+# final = json_fordmat(data_final, award_list)
 # awards = json_output_awards(data_final)
 humor = json_jokes(data_final)
 best_dressed = json_sent_bestdressed(data_final)

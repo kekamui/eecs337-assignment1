@@ -1,4 +1,5 @@
-import host, humor, nom, winners, award_names, sentiment_bestdressed, sentiment_hosts, presenters
+import host, humor, nom, winners, award_names, sentiment_bestdressed, sentiment_hosts
+#import presenters
 import sys, json, re
 from operator import itemgetter
 import nltk
@@ -73,16 +74,17 @@ def format(data, award_data):
     winners_dict = winners.winners(data, award_data)
     nominees_dict = nom.nominees(data, award_data, winners_dict)
 
-    print("Finished compile")
+    #print("Finished compile")
 
     for award in award_list:
         #final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
         #final_dict["award_data"][award] = {"nominees": nom.nominees(data, award_data)[award], "presenters": presenters.extract_presenters(data, award_data)[award], "winner": winners.winners(data, award_data)[award]}
-        final_dict["award_data"][award] = nominees_dict[award] #winners_dict[award]
-        print(final_dict)
+        final_dict["award_data"][award] = nominees_dict.get(award) #winners_dict[award]
+        #print(final_dict)
         # , "winner":
         # final_dict["award_data"][key] = {"nominees": nominees(data)[key], "presenters": presenters(data)[key], "winner": winners(data)[key]}
     
+    print(final_dict)
     return final_dict
 
 def output_awards(data):
@@ -107,7 +109,7 @@ final = format(data_final, award_list)
 # best_dressed = sent_bestdressed(data_final)
 # host_sentiment = sent_hosts(data_final)
 
-print (json.dumps(final))
+# print (json.dumps(final))
 # print (json.dumps(awards))
 # print (json.dumps(humor))
 # print (json.dumps(best_dressed))

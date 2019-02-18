@@ -3,7 +3,7 @@ import json
 from nltk.probability import FreqDist
 #import spacy
 
-def awards(file_name):
+def awards(data):
 
     # nlp = spacy.load('en_core_web_sm')
 

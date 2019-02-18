@@ -1,4 +1,4 @@
-import host, humor, nom, winners, award_names, sentiment_bestdressed, sentiment_hosts
+import host, humor, nom, winners, award_names, sentiment_bestdressed, sentiment_hosts, awards
 # from presenters import extract_presenters
 import sys, json, re
 from operator import itemgetter
@@ -64,12 +64,12 @@ def json_format(data, award_data):
 
     winners_dict = winners.winners(data, award_data)
     nominees_dict = nom.nominees(data, award_data, winners_dict)
-    # presenters_dict = extract_presenters(data, award_data)
+    # presenters_dict = extract_presenters(data, award_data, winners_dict)
 
     for award in award_list:
         final_dict["award_data"][award] = {"nominees": nominees_dict.get(award), "winner": winners_dict.get(award)}
 
-    print(final_dict)
+    # print(final_dict)
     return final_dict
 
 def json_output_awards(data):
@@ -89,10 +89,11 @@ def json_sent_hosts(data):
     return sentiment_hosts_dict
 
 final = json_format(data_final, award_list)
-# awards = output_awards(data_final)
-# humor = jokes(data_final)
-# best_dressed = sent_bestdressed(data_final)
-# host_sentiment = sent_hosts(data_final)
+awards = json_output_awards(data_final)
+humor = json_jokes(data_final)
+best_dressed = json_sent_bestdressed(data_final)
+host_sentiment = json_sent_hosts(data_final)
+
 # human format
 def human_format(json_format_result):
     print("Hosts: " + str(", ".join(json_format_result["hosts"])) + "\n")
@@ -100,7 +101,6 @@ def human_format(json_format_result):
         print ("Award: " + str(key))
         print ("Nominees: " + str(", ".join(json_format_result["award_data"][key]["nominees"])))
         print ("Winner: " + str(json_format_result["award_data"][key]["winner"] + "\n"))
-        count += 1
     return
 
 def human_awards(json_format_result):
@@ -125,30 +125,22 @@ def human_sent_hosts(json_format_result):
 
 
 final = json_format(data_final, award_list)
-# awards = json_output_awards(data_final)
-humor = json_jokes(data_final)
-best_dressed = json_sent_bestdressed(data_final)
-host_sentiment = json_sent_hosts(data_final)
+awards = json_output_awards(data_final)
 
 human_final = human_format(final)
-# human_awards = human_format(awards)
+human_awards = human_format(awards)
 human_jokes = human_jokes(humor)
 human_best_dressed = human_sent_bestdressed(best_dressed)
 human_sent_hosts = human_sent_hosts(host_sentiment)
 
-# print (json.dumps(final))
-# print (json.dumps(awards))
-# print (json.dumps(humor))
-# print (json.dumps(best_dressed))
-# print (json.dumps(host_sentiment))
+print (json.dumps(final))
+print (json.dumps(awards))
 
-# with open('results.json', 'w') as outfile:
-#     json.dump(final, outfile)
-#     json.dump(awards, outfile)
-#     json.dump(humor, outfile)
-#     json.dump(best_dressed, outfile)
-#     json.dump(host_sentiment, outfile)
-# print (human_awards)
-# print (str(human_jokes) + "\n")
-# print (str(human_best_dressed) + "\n")
-# print (str(human_sent_hosts) + "\n")
+with open('results.json', 'w') as outfile:
+    json.dump(final, outfile)
+    json.dump(awards, outfile)
+
+print (str(human_awards) + "\n")
+print (str(human_jokes) + "\n")
+print (str(human_best_dressed) + "\n")
+print (str(human_sent_hosts) + "\n")

@@ -67,12 +67,9 @@ def json_format(data, award_data):
     # presenters_dict = extract_presenters(data, award_data)
 
     for award in award_list:
-        #final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
-        #final_dict["award_data"][award] = {"nominees": nom.nominees(data, award_data)[award], "presenters": presenters.extract_presenters(data, award_data)[award], "winner": winners.winners(data, award_data)[award]}
-        # final_dict["award_data"][award] = nominees_dict.get(award) #winners_dict[award]
-    	#print(final_dict)
         final_dict["award_data"][award] = {"nominees": nominees_dict.get(award), "winner": winners_dict.get(award)}
 
+    print(final_dict)
     return final_dict
 
 def json_output_awards(data):

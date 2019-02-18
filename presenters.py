@@ -146,7 +146,7 @@ def WinnerisinTwt(twt,winnersonlylist):
 			return True,winner
 	return False,0
 
-def AwardisinTwt(twt):
+def AwardisinTwt(twt,list_of_awards):
 	for award in OFFICIAL_AWARDS_1315:
 		if re.search(award, twt, re.IGNORECASE):
 			return True, award
@@ -166,24 +166,19 @@ def addPresenterByAward(presenter,award,awardWinnerPresenterList):
 #######main
 
 #twts = read_tweets()
-def extract_presenters(data):
-	winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
-
+def extract_presenters(data,list_of_awards,dict_of_winners):
+	#winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
+	winnersDict = dict_of_winners
 	# pprint.pprint(winnerslist)
 
-	winnersonlylist = []
-
-	for winner in winnerslist:
-		for key, value in winner.items():
-			winnersonlylist.append(value)
+	winnersonlylist = list(winnersDict.values())
 
 	awardWinnerPresenterList = []
 
-	for winnerdict in winnerslist:
-		for award, winner in winnerdict.items():
-			awardWinnerPresenterList.append({'award': award, 'winner': winner, 'presenters': []})
+	for award, winner in winnersDict.items():
+		awardWinnerPresenterList.append({'award': award, 'winner': winner, 'presenters': []})
 
-
+	print(awardWinnerPresenterList)
 	# print([(X.text, X.label_) for X in doc2.ents])
 	# print(twts[:10])
 
@@ -193,7 +188,7 @@ def extract_presenters(data):
 			if presenter_word in twt and 'RT' not in twt:
 				winnerRes = WinnerisinTwt(twt,winnersonlylist)
 				hasWinner = winnerRes[0]
-				awardRes = AwardisinTwt(twt)
+				awardRes = AwardisinTwt(twt,list_of_awards)
 				hasAward = awardRes[0]
 				twtdoc = nlp(twt)
 				for X in twtdoc.ents:
@@ -206,7 +201,7 @@ def extract_presenters(data):
 						name=get_name_portion(name)
 						# print(name)
 						if isFullName(name):
-							text_data.append(name)
+							#text_data.append(name)
 							if hasAward:
 								#print('---award in twt', awardRes[1])
 								#print(twt)
@@ -220,8 +215,8 @@ def extract_presenters(data):
 
 	freq_dist = FreqDist(text_data)
 
-	presenters = [(w,c) for w, c in freq_dist.most_common(70)]
-	pprint.pprint(presenters)
+	# presenters = [(w,c) for w, c in freq_dist.most_common(70)]
+	# pprint.pprint(presenters)
 
 	res_dict = {}
 	###make presenters into FreqDist
@@ -229,6 +224,6 @@ def extract_presenters(data):
 		presenterfreqdist = FreqDist(awardWinnerPresenterDict["presenters"])
 		res_dict[awardWinnerPresenterDict["award"]]=[p for p,c in presenterfreqdist.most_common(2)]
 
-
+	pprint.pprint(res_dict)
 	###return
 	return res_dict

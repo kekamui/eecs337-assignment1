@@ -150,7 +150,7 @@ doc2 = nlp('Hello my name is Jimmy')
 # 			return True
 # 	return False
 
-def isPresenterTweet(tweet):
+def isPresenterTweet(tweet): ##check if sentence structure is 'X present/introduce/announce' or 'X is presenter'
 	doc=nlp(tweet)
 	for idx, tok in enumerate(doc):
 		if tok.pos_ == "VERB":
@@ -161,13 +161,13 @@ def isPresenterTweet(tweet):
 				# print(tweet)
 				return True
 	return False
+#
+# def extract_nsubj(tweet):
+# 	doc = nlp(tweet)
+# 	sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj")]
+# 	return sub_toks
 
-def extract_nsubj(tweet):
-	doc = nlp(tweet)
-	sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj")]
-	return sub_toks
-
-def extract_subj_entities(doc):
+def extract_subj_entities(doc): ##extract names of people that come before the verb
 	ents=list(doc.ents)
 	person_ents = [ent for ent in ents if ent.label_=='PERSON']
 	#print(person_ents)

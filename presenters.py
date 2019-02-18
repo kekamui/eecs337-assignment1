@@ -9,20 +9,24 @@ from nltk.probability import FreqDist
 import pprint
 import winners
 
+with open('gg2015.json') as json_file:
+    data = json.load(json_file)
+
+JSONPATH='gg2015.json'
+
 pres_regex=r'(presented)(by)([A-Z][a-z]+(?=\s[A-Z])(?:\s[A-Z][a-z]+)+)'
 pres_keyword='(pres|intro|announce|gave)'
 
 name_special_regex = r'([A-Za-z]+\s[A-Z][a-z][A-Za-z]+)'
 
-presenter_words = ["presenter", "present", "introduc", "announc"]
+presenter_words = ["presenter", "present", "announc"]
 award_words = ["best"]
 exception_words = ['host']
 text_data=[]
 
-stop_words = ['the', 'of', 'and', 'a', 'in', 'to', 'it', 'is', 'was', 'i', 'I', 'for', 'you', 'he', 'be', 'with', 'on', 'that', 'by', 'at', 'are', 'not', 'this', 'but', "'s", 'they', 'his', 'from', 'had', 'she', 'which', 'or', 'we', 'an', "n't", 'were', 'been', 'have', 'their', 'has', 'would', 'what', 'will', 'there', 'if', 'can', 'all', 'her', 'as', 'who', 'do', 'one', 'said', 'them', 'some', 'could', 'him', 'into', 'its', 'then', 'two', 'when', 'up', 'time', 'my', 'out', 'so', 'did', 'about', 'your', 'now', 'me', 'no', 'more', 'other', 'just', 'these', 'also', 'people', 'any', 'first', 'only', 'new', 'may', 'very', 'should', 'like', 'than', 'how', 'well', 'way', 'our', 'between', 'years', 'er', 'many', 'those', "'ve", 'being', 'because', "'re"]
-
 winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
 
+# pprint.pprint(winnerslist)
 
 winnersonlylist = []
 
@@ -110,6 +114,11 @@ def isPresenterTweet(tweet): ##check if sentence structure is 'X present/introdu
 				return True
 	return False
 
+def extract_nsubj(tweet):
+	doc = nlp(tweet)
+	sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj")]
+	return sub_toks
+
 def extract_subj_entities(doc): ##extract names of people that come before the verb
 	ents=list(doc.ents)
 	person_ents = [ent for ent in ents if ent.label_=='PERSON']
@@ -160,26 +169,27 @@ def addPresenterByAward(presenter,award):
 			awp_dict["presenters"].append(presenter)
 
 #######main
-def extract_presenters():
 
-	twts = read_tweets()
+#twts = read_tweets()
+def extract_presenters(data):
+
 	# print([(X.text, X.label_) for X in doc2.ents])
 	# print(twts[:10])
 
-	for twt in twts:
+	for tweet in data:
+		twt=tweet[u'text']
 		for presenter_word in presenter_words:
 			if presenter_word in twt and 'RT' not in twt:
-				if isPresenterTweet(twt):
-					winnerRes = WinnerisinTwt(twt)
-					hasWinner = winnerRes[0]
-					awardRes = AwardisinTwt(twt)
-					hasAward = awardRes[0]
-					subjects = extract_nsubj(twt)
-					#print(twt)
-					twtdoc = nlp(twt)
-					subjnames=extract_subj_entities(twtdoc)
-					for subjname in subjnames:
-						name = subjname
+
+				winnerRes = WinnerisinTwt(twt)
+				hasWinner = winnerRes[0]
+				awardRes = AwardisinTwt(twt)
+				hasAward = awardRes[0]
+				twtdoc = nlp(twt)
+				for X in twtdoc.ents:
+					if X.label_ == 'PERSON':
+						name = X.text
+
 						# print('-------')
 						# print(name)
 						name=remove_punctuations(name)
@@ -189,12 +199,12 @@ def extract_presenters():
 						if isFullName(name):
 							text_data.append(name)
 							if hasAward:
-								print('---award in twt', awardRes[1])
-								print(twt)
+								#print('---award in twt', awardRes[1])
+								#print(twt)
 								addPresenterByAward(name,awardRes[1])
 							elif hasWinner:
-								print('----winner in twt : ', winnerRes[1])
-								print(twt)
+								#print('----winner in twt : ', winnerRes[1])
+								#print(twt)
 								addPresenterByWinner(name,winnerRes[1])
 
 				break
@@ -204,12 +214,16 @@ def extract_presenters():
 	presenters = [(w,c) for w, c in freq_dist.most_common(70)]
 	pprint.pprint(presenters)
 
-
+	res_dict = {}
 	###make presenters into FreqDist
 	for awardWinnerPresenterDict in awardWinnerPresenterList:
 		presenterfreqdist = FreqDist(awardWinnerPresenterDict["presenters"])
-		awardWinnerPresenterDict["presenters"] = [p for p,c in presenterfreqdist.most_common(2)]
-	pprint.pprint(awardWinnerPresenterList)
+		res_dict[awardWinnerPresenterDict["award"]]=[p for p,c in presenterfreqdist.most_common(2)]
+
+
+
+
+	pprint.pprint(res_dict)
 
 	###return
 	return awardWinnerPresenterList

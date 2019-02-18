@@ -82,7 +82,7 @@ def format(data, award_data):
         print(final_dict)
         # , "winner":
         # final_dict["award_data"][key] = {"nominees": nominees(data)[key], "presenters": presenters(data)[key], "winner": winners(data)[key]}
-    
+
     return final_dict
 
 def output_awards(data):

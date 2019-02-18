@@ -9,10 +9,10 @@ from nltk.probability import FreqDist
 import pprint
 import winners
 
-with open('gg2015.json') as json_file:
+with open('gg2013.json') as json_file:
     data = json.load(json_file)
 
-JSONPATH='gg2015.json'
+JSONPATH='gg2013.json'
 
 pres_regex=r'(presented)(by)([A-Z][a-z]+(?=\s[A-Z])(?:\s[A-Z][a-z]+)+)'
 pres_keyword='(pres|intro|announce|gave)'

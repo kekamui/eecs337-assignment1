@@ -69,7 +69,10 @@ def json_format(data, award_data):
     for award in award_list:
         #final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
         #final_dict["award_data"][award] = {"nominees": nom.nominees(data, award_data)[award], "presenters": presenters.extract_presenters(data, award_data)[award], "winner": winners.winners(data, award_data)[award]}
+        final_dict["award_data"][award] = nominees_dict.get(award) #winners_dict[award]
+    	#print(final_dict)
         final_dict["award_data"][award] = {"nominees": nominees_dict[award], "winner": winners_dict[award]}
+
     return final_dict
 
 def json_output_awards(data):
@@ -88,6 +91,11 @@ def json_sent_hosts(data):
     sentiment_hosts_dict = sentiment_hosts.pres(data)
     return sentiment_hosts_dict
 
+final = json_format(data_final, award_list)
+# awards = output_awards(data_final)
+# humor = jokes(data_final)
+# best_dressed = sent_bestdressed(data_final)
+# host_sentiment = sent_hosts(data_final)
 # human format
 def human_format(json_format_result):
     for key in json_format_result:

@@ -9,74 +9,31 @@ from nltk.probability import FreqDist
 import pprint
 import winners
 
-with open('gg2015.json') as json_file:
-    data = json.load(json_file)
-
-JSONPATH='gg2015.json'
-
-pres_regex=r'(presented)(by)([A-Z][a-z]+(?=\s[A-Z])(?:\s[A-Z][a-z]+)+)'
-pres_keyword='(pres|intro|announce|gave)'
-
-name_special_regex = r'([A-Za-z]+\s[A-Z][a-z][A-Za-z]+)'
-
 presenter_words = ["presenter", "present", "announc"]
 award_words = ["best"]
-exception_words = ['host'] #todo: words to exclude?
+exception_words = ['host']
 text_data=[]
-
 stop_words = ['win', 'wins', 'best', 'the', 'of', 'and', 'a', 'in', 'to', 'it', 'is', 'was', 'i', 'I', 'for', 'you', 'he', 'be', 'with', 'on', 'that', 'by', 'at', 'are', 'not', 'this', 'but', "'s", 'they', 'his', 'from', 'had', 'she', 'which', 'or', 'we', 'an', "n't", 'were', 'been', 'have', 'their', 'has', 'would', 'what', 'will', 'there', 'if', 'can', 'all', 'her', 'as', 'who', 'do', 'one', 'said', 'them', 'some', 'could', 'him', 'into', 'its', 'then', 'two', 'when', 'up', 'time', 'my', 'out', 'so', 'did', 'about', 'your', 'now', 'me', 'no', 'more', 'other', 'just', 'these', 'also', 'people', 'any', 'first', 'only', 'new', 'may', 'very', 'should', 'like', 'than', 'how', 'well', 'way', 'our', 'between', 'years', 'er', 'many', 'those', "'ve", 'being', 'because', "'re"]
-OFFICIAL_AWARDS_1315 = [
-'cecil b. demille award',
-'best motion picture - drama',
-'best performance by an actress in a motion picture - drama',
-'best performance by an actor in a motion picture - drama',
-'best motion picture - comedy or musical',
-'best performance by an actress in a motion picture - comedy or musical',
-'best performance by an actor in a motion picture - comedy or musical',
-'best animated feature film',
-'best foreign language film',
-'best performance by an actress in a supporting role in a motion picture',
- 'best performance by an actor in a supporting role in a motion picture',
- 'best director - motion picture', 'best screenplay - motion picture',
- 'best original score - motion picture', 'best original song - motion picture',
- 'best television series - drama',
- 'best performance by an actress in a television series - drama',
- 'best performance by an actor in a television series - drama',
- 'best television series - comedy or musical',
- 'best performance by an actress in a television series - comedy or musical',
- 'best performance by an actor in a television series - comedy or musical',
- 'best mini-series or motion picture made for television',
- 'best performance by an actress in a mini-series or motion picture made for television',
- 'best performance by an actor in a mini-series or motion picture made for television',
- 'best performance by an actress in a supporting role in a series, mini-series or motion picture made for television',
-  'best performance by an actor in a supporting role in a series, mini-series or motion picture made for television']
 
 
-winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
 
-# pprint.pprint(winnerslist)
-
-winnersonlylist = []
-
-for winner in winnerslist:
-	for key,value in winner.items():
-		winnersonlylist.append(value)
-
-awardWinnerPresenterList=[]
-
-for winnerdict in winnerslist:
-	for award,winner in winnerdict.items():
-		awardWinnerPresenterList.append({'award':award, 'winner': winner, 'presenters':[]})
-
-#pprint.pprint(awardWinnerPresenterList)
-pprint.pprint(winnerslist)
-
+# winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
+#
+# # pprint.pprint(winnerslist)
+#
 # winnersonlylist = []
 #
 #
-# pprint.pprint(winnersonlylist)
-
-
+#
+# for winner in winnerslist:
+# 	for key,value in winner.items():
+# 		winnersonlylist.append(value)
+#
+# awardWinnerPresenterList=[]
+#
+# for winnerdict in winnerslist:
+# 	for award,winner in winnerdict.items():
+# 		awardWinnerPresenterList.append({'award':award, 'winner': winner, 'presenters':[]})
 
 def read_tweets():
 	cwd = os.getcwd()
@@ -124,9 +81,6 @@ def get_name_portion(text):
 				else:
 					res = word + " " + res
 				indexcount += 1
-
-		# if firstletter.lower() != firstletter: #if first letter is capitalized
-
 	return res
 
 def search_tweet(queries,exclude):
@@ -139,22 +93,9 @@ def search_tweet(queries,exclude):
 			if exclude not in twt:
 				print(twt)
 
-
-
-
 nlp = en_core_web_sm.load()
 doc = nlp('European authorities fined Google a record $5.1 billion on Wednesday for abusing its power in the mobile phone market and ordered the company to alter its practices')
 doc2 = nlp('Hello my name is Jimmy')
-
-
-# print(get_name_portion("hi Jimmy Yook"))
-# def isPresenterTweet(tweet):
-# 	doc=nlp(tweet)
-# 	for idx, tok in enumerate(doc):
-# 		if tok.pos_ == "VERB" and tok.lemma_ in ("present","introduce","announce"):
-# 			print(tweet)
-# 			return True
-# 	return False
 
 def isPresenterTweet(tweet): ##check if sentence structure is 'X present/introduce/announce' or 'X is presenter'
 	doc=nlp(tweet)
@@ -199,37 +140,47 @@ def isFullName(name):
 		return True
 	return False
 
-def WinnerisinTwt(twt):
+def WinnerisinTwt(twt,winnersonlylist):
 	for winner in winnersonlylist:
 		if re.search(winner, twt , re.IGNORECASE):
 			return True,winner
 	return False,0
 
-def AwardisinTwt(twt):
+def AwardisinTwt(twt,list_of_awards):
 	for award in OFFICIAL_AWARDS_1315:
 		if re.search(award, twt, re.IGNORECASE):
 			return True, award
 	return False,0
 
-def addPresenterByWinner(presenter,winner):
+def addPresenterByWinner(presenter,winner,awardWinnerPresenterList):
 	for awp_dict in awardWinnerPresenterList:
 		if awp_dict["winner"] == winner:
 			if not re.match(presenter, winner,re.IGNORECASE): #if presenter and winner is not same person
 				awp_dict["presenters"].append(presenter)
 
-def addPresenterByAward(presenter,award):
+def addPresenterByAward(presenter,award,awardWinnerPresenterList):
 	for awp_dict in awardWinnerPresenterList:
 		if awp_dict["award"] == award:
-			if not re.match(presenter, awp_dict["winner"], re.IGNORECASE):  # if presenter and winner is not same person
-				awp_dict["presenters"].append(presenter)
-
+			awp_dict["presenters"].append(presenter)
 
 #######main
 
 #twts = read_tweets()
-def extract_presenters(data):
 
+def extract_presenters(data,list_of_awards,dict_of_winners):
+	#winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
+	winnersDict = dict_of_winners
 
+	# pprint.pprint(winnerslist)
+
+	winnersonlylist = list(winnersDict.values())
+
+	awardWinnerPresenterList = []
+
+	for award, winner in winnersDict.items():
+		awardWinnerPresenterList.append({'award': award, 'winner': winner, 'presenters': []})
+
+	print(awardWinnerPresenterList)
 	# print([(X.text, X.label_) for X in doc2.ents])
 	# print(twts[:10])
 
@@ -237,9 +188,9 @@ def extract_presenters(data):
 		twt=tweet[u'text']
 		for presenter_word in presenter_words:
 			if presenter_word in twt and 'RT' not in twt:
-				winnerRes = WinnerisinTwt(twt)
+				winnerRes = WinnerisinTwt(twt,winnersonlylist)
 				hasWinner = winnerRes[0]
-				awardRes = AwardisinTwt(twt)
+				awardRes = AwardisinTwt(twt,list_of_awards)
 				hasAward = awardRes[0]
 				twtdoc = nlp(twt)
 				for X in twtdoc.ents:
@@ -252,23 +203,22 @@ def extract_presenters(data):
 						name=get_name_portion(name)
 						# print(name)
 						if isFullName(name):
-							text_data.append(name)
+							#text_data.append(name)
 							if hasAward:
 								#print('---award in twt', awardRes[1])
 								#print(twt)
-								addPresenterByAward(name,awardRes[1])
+								addPresenterByAward(name,awardRes[1],awardWinnerPresenterList)
 							elif hasWinner:
 								#print('----winner in twt : ', winnerRes[1])
 								#print(twt)
-								addPresenterByWinner(name,winnerRes[1])
-
+								addPresenterByWinner(name,winnerRes[1],awardWinnerPresenterList)
 
 				break
 
 	freq_dist = FreqDist(text_data)
 
-	presenters = [(w,c) for w, c in freq_dist.most_common(70)]
-	pprint.pprint(presenters)
+	# presenters = [(w,c) for w, c in freq_dist.most_common(70)]
+	# pprint.pprint(presenters)
 
 	res_dict = {}
 	###make presenters into FreqDist
@@ -276,24 +226,6 @@ def extract_presenters(data):
 		presenterfreqdist = FreqDist(awardWinnerPresenterDict["presenters"])
 		res_dict[awardWinnerPresenterDict["award"]]=[p for p,c in presenterfreqdist.most_common(2)]
 
-
-
-
 	pprint.pprint(res_dict)
-
 	###return
-	return awardWinnerPresenterList
-
-extract_presenters(data)
-#print(text_data)
-#search_tweet(["Ferrell", "present"], "RT")
-
-# for award in OFFICIAL_AWARDS_1315:
-# 	print(winners.winners(data,award))
-
-
-
-
-
-
-#if "best is in
+	return res_dict

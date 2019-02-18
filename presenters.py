@@ -16,36 +16,10 @@ name_special_regex = r'([A-Za-z]+\s[A-Z][a-z][A-Za-z]+)'
 
 presenter_words = ["presenter", "present", "introduc", "announc"]
 award_words = ["best"]
-exception_words = ['host'] #todo: words to exclude?
+exception_words = ['host']
 text_data=[]
 
 stop_words = ['the', 'of', 'and', 'a', 'in', 'to', 'it', 'is', 'was', 'i', 'I', 'for', 'you', 'he', 'be', 'with', 'on', 'that', 'by', 'at', 'are', 'not', 'this', 'but', "'s", 'they', 'his', 'from', 'had', 'she', 'which', 'or', 'we', 'an', "n't", 'were', 'been', 'have', 'their', 'has', 'would', 'what', 'will', 'there', 'if', 'can', 'all', 'her', 'as', 'who', 'do', 'one', 'said', 'them', 'some', 'could', 'him', 'into', 'its', 'then', 'two', 'when', 'up', 'time', 'my', 'out', 'so', 'did', 'about', 'your', 'now', 'me', 'no', 'more', 'other', 'just', 'these', 'also', 'people', 'any', 'first', 'only', 'new', 'may', 'very', 'should', 'like', 'than', 'how', 'well', 'way', 'our', 'between', 'years', 'er', 'many', 'those', "'ve", 'being', 'because', "'re"]
-OFFICIAL_AWARDS_1315 = [
-'cecil b. demille award',
-'best motion picture - drama',
-'best performance by an actress in a motion picture - drama',
-'best performance by an actor in a motion picture - drama',
-'best motion picture - comedy or musical',
-'best performance by an actress in a motion picture - comedy or musical',
-'best performance by an actor in a motion picture - comedy or musical',
-'best animated feature film',
-'best foreign language film',
-'best performance by an actress in a supporting role in a motion picture',
- 'best performance by an actor in a supporting role in a motion picture',
- 'best director - motion picture', 'best screenplay - motion picture',
- 'best original score - motion picture', 'best original song - motion picture',
- 'best television series - drama',
- 'best performance by an actress in a television series - drama',
- 'best performance by an actor in a television series - drama',
- 'best television series - comedy or musical',
- 'best performance by an actress in a television series - comedy or musical',
- 'best performance by an actor in a television series - comedy or musical',
- 'best mini-series or motion picture made for television',
- 'best performance by an actress in a mini-series or motion picture made for television',
- 'best performance by an actor in a mini-series or motion picture made for television',
- 'best performance by an actress in a supporting role in a series, mini-series or motion picture made for television',
-  'best performance by an actor in a supporting role in a series, mini-series or motion picture made for television']
-
 
 winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
 
@@ -61,16 +35,6 @@ awardWinnerPresenterList=[]
 for winnerdict in winnerslist:
 	for award,winner in winnerdict.items():
 		awardWinnerPresenterList.append({'award':award, 'winner': winner, 'presenters':[]})
-
-#pprint.pprint(awardWinnerPresenterList)
-
-
-# winnersonlylist = []
-#
-#
-# pprint.pprint(winnersonlylist)
-
-
 
 def read_tweets():
 	cwd = os.getcwd()
@@ -118,9 +82,6 @@ def get_name_portion(text):
 				else:
 					res = word + " " + res
 				indexcount += 1
-
-		# if firstletter.lower() != firstletter: #if first letter is capitalized
-
 	return res
 
 def search_tweet(queries,exclude):
@@ -133,22 +94,9 @@ def search_tweet(queries,exclude):
 			if exclude not in twt:
 				print(twt)
 
-
-
-
 nlp = en_core_web_sm.load()
 doc = nlp('European authorities fined Google a record $5.1 billion on Wednesday for abusing its power in the mobile phone market and ordered the company to alter its practices')
 doc2 = nlp('Hello my name is Jimmy')
-
-
-# print(get_name_portion("hi Jimmy Yook"))
-# def isPresenterTweet(tweet):
-# 	doc=nlp(tweet)
-# 	for idx, tok in enumerate(doc):
-# 		if tok.pos_ == "VERB" and tok.lemma_ in ("present","introduce","announce"):
-# 			print(tweet)
-# 			return True
-# 	return False
 
 def isPresenterTweet(tweet): ##check if sentence structure is 'X present/introduce/announce' or 'X is presenter'
 	doc=nlp(tweet)
@@ -161,11 +109,6 @@ def isPresenterTweet(tweet): ##check if sentence structure is 'X present/introdu
 				# print(tweet)
 				return True
 	return False
-#
-# def extract_nsubj(tweet):
-# 	doc = nlp(tweet)
-# 	sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj")]
-# 	return sub_toks
 
 def extract_subj_entities(doc): ##extract names of people that come before the verb
 	ents=list(doc.ents)
@@ -216,10 +159,6 @@ def addPresenterByAward(presenter,award):
 		if awp_dict["award"] == award:
 			awp_dict["presenters"].append(presenter)
 
-
-
-
-
 #######main
 def extract_presenters():
 
@@ -235,16 +174,6 @@ def extract_presenters():
 					hasWinner = winnerRes[0]
 					awardRes = AwardisinTwt(twt)
 					hasAward = awardRes[0]
-					# if hasWinner:
-					# 	print('----winner in twt : ', winnerRes[1])
-					# 	print(twt)
-					# if "Best" in twt:
-					# 	print('-----twt with \'best\'')
-					# 	print(twt)
-					# 	for award_name in award_names:
-					# 		if award_name in twt:
-					# 			print('--->award name: ', award_name)
-				#print('--------')
 					subjects = extract_nsubj(twt)
 					#print(twt)
 					twtdoc = nlp(twt)
@@ -268,19 +197,6 @@ def extract_presenters():
 								print(twt)
 								addPresenterByWinner(name,winnerRes[1])
 
-					#text_data.extend(subjnames)
-					# for X in subjnames:
-					# 	if '@' not in X.text and len(X.text.split(" "))>1:
-					# 	#todo: excluded one-word names for now. maybe find a way to add them to the count if match with the full names?
-					# 	#todo: also, find a way to merge typos?
-					# 		name=X.text
-					# 		print('-------')
-					# 		print(name)
-					# 		name=remove_punctuations(name)
-					# 		name=remove_stopwords(name)
-					# 		name=get_name_portion(name)
-					# 		print(name)
-
 				break
 
 	freq_dist = FreqDist(text_data)
@@ -297,16 +213,3 @@ def extract_presenters():
 
 	###return
 	return awardWinnerPresenterList
-
-#print(text_data)
-#search_tweet(["Ferrell", "present"], "RT")
-
-# for award in OFFICIAL_AWARDS_1315:
-# 	print(winners.winners(data,award))
-
-
-
-
-
-
-#if "best is in

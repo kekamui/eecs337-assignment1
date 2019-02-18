@@ -5,44 +5,14 @@ from winners import winners
 from operator import itemgetter
 from nltk.tokenize import TweetTokenizer
 
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
+def nominees_helper(awards_and_winners,data):
+    important_list = ["beat", "but", "better", "contenders", "contender", "over", "upset", "lost", "liked", "wish", "doesn't win", "please", "robbed"]
 
-with open('gg2013.json') as json_file:
-    data = json.load(json_file)
+    stop_dict_nominees = ["golden", "globes", "goldenglobes", "awards", "tweet",
+                "tweets", "award", "rt", "@", "best", "motion", "actress",
+                "actor", "drama", "picture","mtvnews","television","series",
+                "foreign", "film","comedy","hbo","girlshbo", "pixar", "best", "actress", "actor"]
 
-
-OFFICIAL_AWARDS_1315 = ['cecil b. demille award', 'best motion picture - drama', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best motion picture - comedy or musical', 'best performance by an actress in a motion picture - comedy or musical', 'best performance by an actor in a motion picture - comedy or musical', 'best animated feature film', 'best foreign language film', 'best performance by an actress in a supporting role in a motion picture', 'best performance by an actor in a supporting role in a motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best television series - comedy or musical', 'best performance by an actress in a television series - comedy or musical', 'best performance by an actor in a television series - comedy or musical', 'best mini-series or motion picture made for television', 'best performance by an actress in a mini-series or motion picture made for television', 'best performance by an actor in a mini-series or motion picture made for television', 'best performance by an actress in a supporting role in a series, mini-series or motion picture made for television', 'best performance by an actor in a supporting role in a series, mini-series or motion picture made for television']
-OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - musical or comedy', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best performance by an actress in a motion picture - musical or comedy', 'best performance by an actor in a motion picture - musical or comedy', 'best performance by an actress in a supporting role in any motion picture', 'best performance by an actor in a supporting role in any motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best motion picture - animated', 'best motion picture - foreign language', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best television series - musical or comedy', 'best television limited series or motion picture made for television', 'best performance by an actress in a limited series or a motion picture made for television', 'best performance by an actor in a limited series or a motion picture made for television', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best performance by an actress in a television series - musical or comedy', 'best performance by an actor in a television series - musical or comedy', 'best performance by an actress in a supporting role in a series, limited series or motion picture made for television', 'best performance by an actor in a supporting role in a series, limited series or motion picture made for television', 'cecil b. demille award']
-
-
-big_dict = [
-["best performance by an actress in a motion picture - drama"],
-["best performance by an actor in a motion picture - drama"],
-["best performance by an actress in a motion picture - musical or comedy"],
-["best performance by an actor in a motion picture - musical or comedy"],
-["best motion picture - drama"],
-["best motion picture - musical or comedy"],
-["best performance by an actress in a supporting role in any motion picture","best performance by an actress in a supporting role in a motion picture"],
-["best performance by an actor in a supporting role in any motion picture","best performance by an actor in a supporting role in a motion picture"],
-["best director - motion picture"],
-["best screenplay - motion picture"],
-["best motion picture - animated", "best animated feature film", "best animated feature"],
-["best motion picture - foreign language", "best foreign film", "best foreign language"],
-["best original score - motion picture"],
-["best original song - motion picture"],
-["best television series - drama"],
-["best television series - musical or comedy"]
-]
-
-important_list = ["beat", "but", "better", "contenders", "contender", "over", "upset", "lost", "liked", "wish", "doesn't win", "please", "robbed"]
-
-stop_dict_nominees = ["golden", "globes", "goldenglobes", "awards", "tweet",
-            "tweets", "award", "rt", "@", "best", "motion", "actress",
-            "actor", "drama", "picture","mtvnews","television","series",
-            "foreign", "film","comedy","hbo","girlshbo", "pixar", "best", "actress", "actor"]
-
-def nominees(awards_and_winners):
     value = ""
     for keys,values in awards_and_winners.items():
         key = keys
@@ -131,7 +101,18 @@ def nominees(awards_and_winners):
         return {key:final_ret}
     return {"":[{"nominees":""}]}
 
-for award in OFFICIAL_AWARDS_1315:
-    awards_and_winners = winners(data,award)
-    nominees1 = nominees(awards_and_winners)
-    # print(nominees1)
+def nominees(data, award_list):
+	winners_dict = winners(data, award_list)
+	nom_dict = {}
+
+	for award in award_list:
+		if award in winners_dict:
+		    award_winner_pair = {award:winners_dict[award]}
+
+		    list_of_nominees = nominees_helper(award_winner_pair,data)
+		    # print(list_of_nominees)
+		    nom_dict.update(list_of_nominees)
+		else:
+			nom_dict.update({award:{"nominees":[]}})
+
+	return(nom_dict)

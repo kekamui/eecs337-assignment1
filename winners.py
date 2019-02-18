@@ -66,9 +66,6 @@ def winners(data, list_of_awards):
                             final_dict2.update({temp_w:prev_count+1})
                         else:
                             final_dict2.update({temp_w:1})
-                #
-                # print(tagged_tweet)
-                # print(token_split)
 
                 nnp_list = [s[0] for s in tagged_tweet if s[1] == 'NNP' and s[0].lower() not in stop_dict]
 
@@ -79,19 +76,17 @@ def winners(data, list_of_awards):
                     else:
                         final_dict.update({nnp_word:1})
 
-        # print(award_data)
-
         if len(final_dict2) == 0:
             sorted_list = sorted(final_dict.items(), key = itemgetter(1), reverse = True)
             # print(sorted_list)
             if len(sorted_list) >= 2:
                 # print("1")
                 result.update({host_word:sorted_list[0][0].lower()+" "+sorted_list[1][0].lower()})
+            else:
+                result.update({host_word:""})
         else:
             sorted_list = sorted(final_dict2.items(), key = itemgetter(1), reverse = True)
             # print("2")
             result.update({host_word:(sorted_list[0][0])})
 
     return result
-
-#print(winners(data, OFFICIAL_AWARDS_1315))

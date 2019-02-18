@@ -1,4 +1,4 @@
-import host, humor, nom, winners, award_names
+import host, humor, nom, winners, award_names, sentiment_bestdressed, sentiment_hosts, presenters
 import sys, json, re
 from operator import itemgetter
 import nltk
@@ -9,6 +9,7 @@ from collections import Counter
 
 # nltk.download('punkt')
 # nltk.download('averaged_perceptron_tagger')
+# nltk.download('stopwords')
 
 ###### ADD AWARD NAMES LIST HERE #########
 
@@ -56,24 +57,46 @@ if sys.argv[1] == "gg2015.json":
 
 final_dict = {}
 award_dict = {}
+humor_dict = {}
+sent_bestdressed_dict = {}
+sent_hosts_dict = {}
+
 
 def format(data, award_data):
     final_dict["hosts"] = host.host(data)
     final_dict["award_data"] = {}
 
     for award in award_list:
-        final_dict["award_data"][award] = winners.winners(data, award_data)[award]
+        final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
+        #         final_dict["award_data"][award] = {"nominees": nom.nominees(data, award_data)[award], "presenters": presenters.extract_presenters(data, award_data)[award], "winner": winners.winners(data, award_data)[award]}
         print (final_dict)
-        # nom.nominees(data, award_data)[award]
-        # , "winner":
-        # final_dict["award_data"][key] = {"nominees": nominees(data)[key], "presenters": presenters(data)[key], "winner": winners(data)[key]}
+
     return final_dict
 
-# def output_awards(data):
-#     award_dict["awards"] = awards.awards(data)
+def output_awards(data):
+    award_dict["awards"] = awards.awards(data)
+    return award_dict
+
+def jokes(data):
+    humor_dict = humor.pres(data)
+    return humor_dict
+
+def sent_bestdressed(data):
+    sent_bestdressed_dict = sentiment_bestdressed.pres(data)
+    return sent_bestdressed_dict
+
+def sent_hosts(data):
+    sentiment_hosts_dict = sentiment_hosts.pres(data)
+    return sentiment_hosts_dict
 
 final = format(data_final, award_list)
-awards = output_awards(data)
+# awards = output_awards(data_final)
+# humor = jokes(data_final)
+# best_dressed = sent_bestdressed(data_final)
+# host_sentiment = sent_hosts(data_final)
 
 print (json.dumps(final))
-print (json.dumps(output_awards))
+# print (json.dumps(awards))
+# print (json.dumps(humor))
+# print (json.dumps(best_dressed))
+# print (json.dumps(host_sentiment))

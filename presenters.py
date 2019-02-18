@@ -9,11 +9,6 @@ from nltk.probability import FreqDist
 import pprint
 import winners
 
-with open('gg2013.json') as json_file:
-    data = json.load(json_file)
-
-JSONPATH='gg2013.json'
-
 pres_regex=r'(presented)(by)([A-Z][a-z]+(?=\s[A-Z])(?:\s[A-Z][a-z]+)+)'
 pres_keyword='(pres|intro|announce|gave)'
 
@@ -54,7 +49,6 @@ OFFICIAL_AWARDS_1315 = [
 
 winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
 
-# pprint.pprint(winnerslist)
 
 winnersonlylist = []
 
@@ -303,7 +297,7 @@ def extract_presenters():
 
 	###return
 	return awardWinnerPresenterList
-extract_presenters()
+
 #print(text_data)
 #search_tweet(["Ferrell", "present"], "RT")
 

@@ -5,13 +5,6 @@ from operator import itemgetter
 from nltk.tokenize import TweetTokenizer
 from nltk.corpus import stopwords
 
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('stopwords')
-
-with open('gg2013.json') as json_file:
-    data = json.load(json_file)
-
 tknzr = TweetTokenizer()
 
 def pres(data):
@@ -29,7 +22,7 @@ def pres(data):
         count = 0
         for host_word in host_dict:
             if host_word in tweet_lower:
-                #print(tweet)
+                # print(tweet)
                 token_tweet = tweet.split()
                 temp_quote = ""
                 tagged_tweet = nltk.pos_tag(token_tweet)
@@ -54,30 +47,17 @@ def pres(data):
                         else:
                             final_dict.update({temp_quote:1})
 
-                        # if temp_quote in final_dict2:
-                        #     prev_list = final_dict2[temp_quote]
-                        #     for lists in prev_list:
-                        #         if prev_list == nnp_list:
-                        #             key2 = True
-                        #     if key:
-                        #         prev_list.append(nnp_list)
-                        #         final_dict2.update({temp_quote:prev_list})
-                        # else:
-                        #     final_dict2.update({temp_quote:[nnp_list]})
-
-
-
-
-
     sorted_list = sorted(final_dict.items(), key = itemgetter(1), reverse = True)
-    #final_ret = {"jokes":[]}
-    lisst = []
+    final_ret = {"most talked about jokes":[]}
     count = 0
     for i in sorted_list:
         if count == 8:
             break
-        #lisst = final_ret["jokes"]
+        lisst = final_ret["most talked about jokes"]
         lisst.append(i[0])
-        #final_ret.update({"jokes":lisst})
+        final_ret.update({"most talked about jokes":lisst})
         count += 1
-    return(lisst)
+    return final_ret
+
+    # print(sorted_list[0][0],sorted_list[1][0])
+# print(pres(data))

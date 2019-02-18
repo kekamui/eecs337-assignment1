@@ -166,8 +166,8 @@ def addPresenterByAward(presenter,award,awardWinnerPresenterList):
 #######main
 
 #twts = read_tweets()
-def extract_presenters(data):
-	winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
+def extract_presenters(data, award_list):
+	winnerslist = [winners.winners(data, award) for award in award_list]
 
 	# pprint.pprint(winnerslist)
 

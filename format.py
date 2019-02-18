@@ -47,8 +47,10 @@ with open(sys.argv[1]) as json_file:
 
 if sys.argv[1] == "gg2013.json":
     award_list = OFFICIAL_AWARDS_1315
-if sys.argv[1] == "gg2015.json":
+elif sys.argv[1] == "gg2015.json":
     award_list = OFFICIAL_AWARDS_1819
+else:
+    award_list = OFFICIAL_AWARDS_1315
 
 ######### MODIFY IF STATEMENT HERE TO TEST OTHER GOLDEN GLOBE YEARS ##########
 # if sys.argv[1] == ".json":
@@ -66,11 +68,21 @@ def format(data, award_data):
     final_dict["hosts"] = host.host(data)
     final_dict["award_data"] = {}
 
-    for award in award_list:
-        final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
-        #         final_dict["award_data"][award] = {"nominees": nom.nominees(data, award_data)[award], "presenters": presenters.extract_presenters(data, award_data)[award], "winner": winners.winners(data, award_data)[award]}
-        print (final_dict)
+    print(final_dict)
 
+    winners_dict = winners.winners(data, award_data)
+    nominees_dict = nom.nominees(data, award_data, winners_dict)
+
+    print("Finished compile")
+
+    for award in award_list:
+        #final_dict["award_data"][award] = {"presenters": presenters.extract_presenters(data, award_data)[award]}
+        #final_dict["award_data"][award] = {"nominees": nom.nominees(data, award_data)[award], "presenters": presenters.extract_presenters(data, award_data)[award], "winner": winners.winners(data, award_data)[award]}
+        final_dict["award_data"][award] = nominees_dict[award] #winners_dict[award]
+        print(final_dict)
+        # , "winner":
+        # final_dict["award_data"][key] = {"nominees": nominees(data)[key], "presenters": presenters(data)[key], "winner": winners(data)[key]}
+    
     return final_dict
 
 def output_awards(data):

@@ -88,21 +88,29 @@ def nominees_helper(awards_and_winners,data):
                             final_dict.update({nnp_word:1})
 
         sorted_list = sorted(final_dict2.items(), key = itemgetter(1), reverse = True)
-        # print(sorted_list)
+        #print(sorted_list)
+        
+        nom_list = []
         count = 0
-        final_ret = {"nominees":[]}
+        final_ret = []
         for i in sorted_list:
             if count == 4:
                 break
-            lisst = final_ret["nominees"]
-            lisst.append(i[0])
-            final_ret.update({"nominees":lisst})
+            nom_list.append(i[0])
             count += 1
-        return {key:final_ret}
-    return {"":[{"nominees":""}]}
+        """
+        sl_len = len(sorted_list)
+        if sl_len > 4:
+        	sl_len = 3
+        else:
+        	sl_len = sl_len - 1
+        nom_list = sorted_list[:sl_len]
+        """
+        #print(nom_list)
+        return {key:nom_list}
+    return {key:[]}
 
-def nominees(data, award_list):
-	winners_dict = winners(data, award_list)
+def nominees(data, award_list, winners_dict):
 	nom_dict = {}
 
 	for award in award_list:
@@ -113,6 +121,6 @@ def nominees(data, award_list):
 		    # print(list_of_nominees)
 		    nom_dict.update(list_of_nominees)
 		else:
-			nom_dict.update({award:{"nominees":[]}})
+			nom_dict.update({award:[]})
 
 	return(nom_dict)

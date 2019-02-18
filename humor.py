@@ -51,7 +51,7 @@ def pres(data):
     final_ret = {"most talked about jokes":[]}
     count = 0
     for i in sorted_list:
-        if count == 8:
+        if count == 2:
             break
         lisst = final_ret["most talked about jokes"]
         lisst.append(i[0])

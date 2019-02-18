@@ -60,7 +60,7 @@ big_dict = [
 
 def winners(data, list_of_awards):
 
-    stop_dict = ["golden", "globes", "goldenglobes", "awards", "tweet",
+    stop_dict = ["http","golden", "globes", "goldenglobes", "awards", "tweet",
                 "tweets", "award", "rt", "@", "best", "motion", "actress",
                 "actor", "drama", "picture","mtvnews","television","series",
                 "foreign", "film","comedy","hbo","girlshbo", "|","|"]

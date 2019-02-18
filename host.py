@@ -43,12 +43,12 @@ def host(data):
 	sorted_list = sorted(showcount.items(), key = itemgetter(1), reverse = True)
 	if sorted_list[0][1] - sorted_list[1][1] < 100:
 	    #print({"hosts":[sorted_list[0][0].lower(),sorted_list[1][0].lower()]})
-	    return {sorted_list[0][0].lower(),sorted_list[1][0].lower()}
+	    return [sorted_list[0][0].lower(),sorted_list[1][0].lower()]
 
 	else:
 	    sorted_list = sorted(final_dict.items(), key = itemgetter(1), reverse = True)
 	    #print(sorted_list)
 	    #print({"hosts":sorted_list[0][0].lower() + " " + sorted_list[1][0].lower()})
-	    return {sorted_list[0][0].lower() + " " + sorted_list[1][0].lower()}
+	    return [sorted_list[0][0].lower() + " " + sorted_list[1][0].lower()]
 
 # print(host(data))

@@ -82,8 +82,14 @@ def awards(file_name):
     freq_dist = FreqDist(text_data)
 
     # Find 20 most common phrases
-    awards = [w for w, c in freq_dist.most_common(20)]
+    awards = [w for w, c in freq_dist.most_common(25)]
 
     # print(awards)
 
     return awards
+"""
+with open('gg2013.json') as json_file:
+    data = json.load(json_file)
+
+print(awards(data))
+"""

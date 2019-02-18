@@ -4,9 +4,6 @@ import json
 from operator import itemgetter
 from nltk.tokenize import TweetTokenizer
 
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-
 def winners(data, list_of_awards):
 
     stop_dict = ["http","golden", "globes", "goldenglobes", "awards", "tweet",

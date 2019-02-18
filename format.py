@@ -1,5 +1,14 @@
 import host, humor, nom, winners, award_names
-import sys, json
+import sys, json, re
+from operator import itemgetter
+import nltk
+from nltk.tokenize import TweetTokenizer
+from nltk.probability import FreqDist
+from nltk.corpus import stopwords
+from collections import Counter
+
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
 
 ###### ADD AWARD NAMES LIST HERE #########
 
@@ -44,19 +53,24 @@ if sys.argv[1] == "gg2015.json":
 # if sys.argv[1] == ".json":
 #     award_list =
 
+
 final_dict = {}
 award_dict = {}
 
 def format(data, award_data):
     final_dict["hosts"] = host.host(data)
     final_dict["award_data"] = {}
+
     for award in award_list:
-        final_dict["award_data"][key] = {"nominees": nom.nominees(data, award_data)[key], "winner": winners.winners(data, award_data)[key]}
+        final_dict["award_data"][award] = winners.winners(data, award_data)[award]
+        print (final_dict)
+        # nom.nominees(data, award_data)[award]
+        # , "winner":
         # final_dict["award_data"][key] = {"nominees": nominees(data)[key], "presenters": presenters(data)[key], "winner": winners(data)[key]}
     return final_dict
 
-def output_awards(data):
-    award_dict["awards"] = awards.awards(data)
+# def output_awards(data):
+#     award_dict["awards"] = awards.awards(data)
 
 final = format(data_final, award_list)
 awards = output_awards(data)

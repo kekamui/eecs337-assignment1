@@ -84,6 +84,6 @@ def awards(file_name):
     # Find 20 most common phrases
     awards = [w for w, c in freq_dist.most_common(20)]
 
-    print(awards)
+    # print(awards)
 
     return awards

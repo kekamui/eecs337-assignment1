@@ -81,6 +81,3 @@ def pres(data):
         #final_ret.update({"jokes":lisst})
         count += 1
     return(lisst)
-
-    # print(sorted_list[0][0],sorted_list[1][0])
-#print(pres(data))

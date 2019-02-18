@@ -94,8 +94,8 @@ def search_tweet(queries,exclude):
 				print(twt)
 
 nlp = en_core_web_sm.load()
-doc = nlp('European authorities fined Google a record $5.1 billion on Wednesday for abusing its power in the mobile phone market and ordered the company to alter its practices')
-doc2 = nlp('Hello my name is Jimmy')
+#doc = nlp('European authorities fined Google a record $5.1 billion on Wednesday for abusing its power in the mobile phone market and ordered the company to alter its practices')
+#doc2 = nlp('Hello my name is Jimmy')
 
 def isPresenterTweet(tweet): ##check if sentence structure is 'X present/introduce/announce' or 'X is presenter'
 	doc=nlp(tweet)
@@ -147,7 +147,7 @@ def WinnerisinTwt(twt,winnersonlylist):
 	return False,0
 
 def AwardisinTwt(twt,list_of_awards):
-	for award in OFFICIAL_AWARDS_1315:
+	for award in list_of_awards:
 		if re.search(award, twt, re.IGNORECASE):
 			return True, award
 	return False,0
@@ -180,7 +180,7 @@ def extract_presenters(data,list_of_awards,dict_of_winners):
 	for award, winner in winnersDict.items():
 		awardWinnerPresenterList.append({'award': award, 'winner': winner, 'presenters': []})
 
-	print(awardWinnerPresenterList)
+	#print(awardWinnerPresenterList)
 	# print([(X.text, X.label_) for X in doc2.ents])
 	# print(twts[:10])
 
@@ -226,6 +226,6 @@ def extract_presenters(data,list_of_awards,dict_of_winners):
 		presenterfreqdist = FreqDist(awardWinnerPresenterDict["presenters"])
 		res_dict[awardWinnerPresenterDict["award"]]=[p for p,c in presenterfreqdist.most_common(2)]
 
-	pprint.pprint(res_dict)
+	#pprint.pprint(res_dict)
 	###return
 	return res_dict

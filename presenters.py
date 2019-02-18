@@ -9,36 +9,32 @@ from nltk.probability import FreqDist
 import pprint
 import winners
 
-with open('gg2015.json') as json_file:
-    data = json.load(json_file)
-
-JSONPATH='gg2015.json'
-
-pres_regex=r'(presented)(by)([A-Z][a-z]+(?=\s[A-Z])(?:\s[A-Z][a-z]+)+)'
-pres_keyword='(pres|intro|announce|gave)'
-
-name_special_regex = r'([A-Za-z]+\s[A-Z][a-z][A-Za-z]+)'
 
 presenter_words = ["presenter", "present", "announc"]
 award_words = ["best"]
 exception_words = ['host']
 text_data=[]
+stop_words = ['win', 'wins', 'best', 'the', 'of', 'and', 'a', 'in', 'to', 'it', 'is', 'was', 'i', 'I', 'for', 'you', 'he', 'be', 'with', 'on', 'that', 'by', 'at', 'are', 'not', 'this', 'but', "'s", 'they', 'his', 'from', 'had', 'she', 'which', 'or', 'we', 'an', "n't", 'were', 'been', 'have', 'their', 'has', 'would', 'what', 'will', 'there', 'if', 'can', 'all', 'her', 'as', 'who', 'do', 'one', 'said', 'them', 'some', 'could', 'him', 'into', 'its', 'then', 'two', 'when', 'up', 'time', 'my', 'out', 'so', 'did', 'about', 'your', 'now', 'me', 'no', 'more', 'other', 'just', 'these', 'also', 'people', 'any', 'first', 'only', 'new', 'may', 'very', 'should', 'like', 'than', 'how', 'well', 'way', 'our', 'between', 'years', 'er', 'many', 'those', "'ve", 'being', 'because', "'re"]
 
-winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
 
-# pprint.pprint(winnerslist)
 
-winnersonlylist = []
-
-for winner in winnerslist:
-	for key,value in winner.items():
-		winnersonlylist.append(value)
-
-awardWinnerPresenterList=[]
-
-for winnerdict in winnerslist:
-	for award,winner in winnerdict.items():
-		awardWinnerPresenterList.append({'award':award, 'winner': winner, 'presenters':[]})
+# winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
+#
+# # pprint.pprint(winnerslist)
+#
+# winnersonlylist = []
+#
+#
+#
+# for winner in winnerslist:
+# 	for key,value in winner.items():
+# 		winnersonlylist.append(value)
+#
+# awardWinnerPresenterList=[]
+#
+# for winnerdict in winnerslist:
+# 	for award,winner in winnerdict.items():
+# 		awardWinnerPresenterList.append({'award':award, 'winner': winner, 'presenters':[]})
 
 def read_tweets():
 	cwd = os.getcwd()
@@ -145,7 +141,7 @@ def isFullName(name):
 		return True
 	return False
 
-def WinnerisinTwt(twt):
+def WinnerisinTwt(twt,winnersonlylist):
 	for winner in winnersonlylist:
 		if re.search(winner, twt , re.IGNORECASE):
 			return True,winner
@@ -157,13 +153,13 @@ def AwardisinTwt(twt):
 			return True, award
 	return False,0
 
-def addPresenterByWinner(presenter,winner):
+def addPresenterByWinner(presenter,winner,awardWinnerPresenterList):
 	for awp_dict in awardWinnerPresenterList:
 		if awp_dict["winner"] == winner:
 			if not re.match(presenter, winner,re.IGNORECASE): #if presenter and winner is not same person
 				awp_dict["presenters"].append(presenter)
 
-def addPresenterByAward(presenter,award):
+def addPresenterByAward(presenter,award,awardWinnerPresenterList):
 	for awp_dict in awardWinnerPresenterList:
 		if awp_dict["award"] == award:
 			awp_dict["presenters"].append(presenter)
@@ -172,6 +168,22 @@ def addPresenterByAward(presenter,award):
 
 #twts = read_tweets()
 def extract_presenters(data):
+	winnerslist = [winners.winners(data, award) for award in OFFICIAL_AWARDS_1315]
+
+	# pprint.pprint(winnerslist)
+
+	winnersonlylist = []
+
+	for winner in winnerslist:
+		for key, value in winner.items():
+			winnersonlylist.append(value)
+
+	awardWinnerPresenterList = []
+
+	for winnerdict in winnerslist:
+		for award, winner in winnerdict.items():
+			awardWinnerPresenterList.append({'award': award, 'winner': winner, 'presenters': []})
+
 
 	# print([(X.text, X.label_) for X in doc2.ents])
 	# print(twts[:10])
@@ -180,8 +192,7 @@ def extract_presenters(data):
 		twt=tweet[u'text']
 		for presenter_word in presenter_words:
 			if presenter_word in twt and 'RT' not in twt:
-
-				winnerRes = WinnerisinTwt(twt)
+				winnerRes = WinnerisinTwt(twt,winnersonlylist)
 				hasWinner = winnerRes[0]
 				awardRes = AwardisinTwt(twt)
 				hasAward = awardRes[0]
@@ -189,7 +200,6 @@ def extract_presenters(data):
 				for X in twtdoc.ents:
 					if X.label_ == 'PERSON':
 						name = X.text
-
 						# print('-------')
 						# print(name)
 						name=remove_punctuations(name)
@@ -201,11 +211,11 @@ def extract_presenters(data):
 							if hasAward:
 								#print('---award in twt', awardRes[1])
 								#print(twt)
-								addPresenterByAward(name,awardRes[1])
+								addPresenterByAward(name,awardRes[1],awardWinnerPresenterList)
 							elif hasWinner:
 								#print('----winner in twt : ', winnerRes[1])
 								#print(twt)
-								addPresenterByWinner(name,winnerRes[1])
+								addPresenterByWinner(name,winnerRes[1],awardWinnerPresenterList)
 
 				break
 
@@ -226,4 +236,5 @@ def extract_presenters(data):
 	pprint.pprint(res_dict)
 
 	###return
-	return awardWinnerPresenterList
+	return res_dict
+

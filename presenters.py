@@ -180,7 +180,7 @@ def extract_presenters(data,list_of_awards,dict_of_winners):
 	for award, winner in winnersDict.items():
 		awardWinnerPresenterList.append({'award': award, 'winner': winner, 'presenters': []})
 
-	print(awardWinnerPresenterList)
+	#print(awardWinnerPresenterList)
 	# print([(X.text, X.label_) for X in doc2.ents])
 	# print(twts[:10])
 
@@ -226,6 +226,6 @@ def extract_presenters(data,list_of_awards,dict_of_winners):
 		presenterfreqdist = FreqDist(awardWinnerPresenterDict["presenters"])
 		res_dict[awardWinnerPresenterDict["award"]]=[p for p,c in presenterfreqdist.most_common(2)]
 
-	pprint.pprint(res_dict)
+	#pprint.pprint(res_dict)
 	###return
 	return res_dict

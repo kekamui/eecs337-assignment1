@@ -67,7 +67,7 @@ def json_format(data, award_data):
     presenters_dict = extract_presenters(data, award_data, winners_dict)
 
     for award in award_list:
-        final_dict["award_data"][award] = {"nominees": nominees_dict.get(award), "presenters": presenters_dict.get(award), winner": winners_dict.get(award)}
+        final_dict["award_data"][award] = {"nominees": nominees_dict.get(award), "presenters": presenters_dict.get(award), "winners": winners_dict.get(award)}
 
     # print(final_dict)
     return final_dict
@@ -101,7 +101,7 @@ def human_format(json_format_result):
         print ("Award: " + str(key))
         print ("Nominees: " + str(", ".join(json_format_result["award_data"][key]["nominees"])))
         print ("Presenters: " + str(", ".join(json_format_result["award_data"][key]["presenters"])))
-        print ("Winner: " + str(json_format_result["award_data"][key]["winner"] + "\n"))
+        print ("Winner: " + str(json_format_result["award_data"][key]["winners"] + "\n"))
     return
 
 def human_awards(json_format_result):

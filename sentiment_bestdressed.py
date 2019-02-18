@@ -55,7 +55,7 @@ def pres(data):
     final_ret = {"best dressed":[]}
     count = 0
     for i in sorted_list:
-        if count == 8:
+        if count == 2:
             break
         lisst = final_ret["best dressed"]
         lisst.append(i[0])

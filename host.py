@@ -4,7 +4,7 @@ import json
 from operator import itemgetter
 from collections import Counter
 
-def host(file_name):
+def host(data):
 
 	host_dict = ["host", "hosting", "hosts"]
 	stop_dict = ["golden", "globes", "goldenglobes", "awards", "tweet", "tweets", "award", "rt", "@"]
@@ -51,4 +51,4 @@ def host(file_name):
 	    #print({"hosts":sorted_list[0][0].lower() + " " + sorted_list[1][0].lower()})
 	    return {sorted_list[0][0].lower() + " " + sorted_list[1][0].lower()}
 
-print(host(data))
+#print(host(data))

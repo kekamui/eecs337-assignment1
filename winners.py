@@ -87,6 +87,8 @@ def winners(data, list_of_awards):
             if len(sorted_list) >= 2:
                 # print("1")
                 result.update({host_word:sorted_list[0][0].lower()+" "+sorted_list[1][0].lower()})
+            else:
+                result.update({host_word:""})
         else:
             sorted_list = sorted(final_dict2.items(), key = itemgetter(1), reverse = True)
             # print("2")

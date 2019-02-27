@@ -94,22 +94,23 @@ def main():
     for y in sys.argv[1:]:
         year_list.append(y)
 
-    print(year_list)
+    #print(year_list)
 
     for year in year_list:
-        print("Year: " + year)
+        print("\nProcessing year " + year + "\n")
         if  year == "2013" or year == "2015":
-            print("Fetching 1315")
+            print("Fetching OFFICIAL_AWARDS_1315 awards list\n")
             award_list = OFFICIAL_AWARDS_1315
         else:
-            print("Fetching 1819")
+            print("Fetching OFFICIAL_AWARDS_1819 awards list\n")
             award_list = OFFICIAL_AWARDS_1819
 
         with open('gg%s.json' % year, 'r') as f:
                 gg_file = json.load(f)
+        print("Successfully opened corpus file\n")
 
         results_assembler.final_output(gg_file,award_list,year)
-        print("Finished " + year)
+        print("\nFinished processing year " + year + "\n")
 
     return
 

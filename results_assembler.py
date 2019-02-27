@@ -91,7 +91,7 @@ def json_sent_hosts(data):
 
 # human format
 def human_format(json_format_result):
-	print("Hosts: " + str(", ".join(json_format_result["hosts"])) + "\n")
+	print("\nHosts: " + str(", ".join(json_format_result["hosts"])) + "\n")
 	for key in json_format_result["award_data"]:
 		print ("Award: " + str(key))
 		print ("Nominees: " + str(", ".join(json_format_result["award_data"][key]["nominees"])))
